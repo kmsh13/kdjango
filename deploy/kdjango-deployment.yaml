@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-deployment
+  labels:
+    app: kdjango
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kdjango
+  template:
+    metadata:
+      labels:
+        app: kdjango
+    spec:
+      containers:
+        - name: kdjango
+          image: kamesh13/kdjango:v1
+          ports:
+            - containerPort: 8000
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: pg-database
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: pg-username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: pg-password
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: kdjango-configmap
+                  key: database_url
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kdjango-service
+spec:
+  selector:
+    app: kdjango
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 30000
