@@ -1,0 +1,10 @@
+
+#build
+docker build --tag kamesh13/kdjango:v2 .
+
+
+#run
+docker run -d -p 8000:8000 kamesh13/kdjango:v2 
+
+#push
+kamesh13/kdjango:v2

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: kdjango
-          image: kamesh13/kdjango:v1
+          image: kamesh13/kdjango:v3
           ports:
             - containerPort: 8000
           env:
